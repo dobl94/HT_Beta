@@ -44,7 +44,7 @@
         await predict();
         window.requestAnimationFrame(loop);
     }
-    var status = "Walk"
+    var status = "Stand"
     var count = 10
     async function predict() {
         // Prediction #1: run input through posenet
@@ -81,12 +81,15 @@
     function Count(prediction){
 	
         let codeC = "";
-        if(prediction[0].probability.toFixed(2)==1.00){
-	    if(status=="Jump"){
+        if(prediction[4].probability.toFixed(2)==1.00){
+		if(status=="Jump"){
 		count--;
-		codeC=count.toString(10);
+		codeC=count.toString();
 	    }
-		status = "Walk"
+		status = "Stand"
+	}
+	else if(prediction[0].probability.toFixed(2)==1.00){
+	    status = "Walk"
 	}else if(prediction[1].probability.toFixed(2)==1.00){
 	    status = "Squat"
 	}else if(prediction[2].probability.toFixed(2)==1.00){
