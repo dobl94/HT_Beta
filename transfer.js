@@ -52,7 +52,7 @@
         const { pose, posenetOutput } = await model.estimatePose(webcam.canvas);
         // Prediction 2: run input through teachable machine classification model
         const prediction = await model.predict(posenetOutput);
-	if(prediction[0].probability.tofixed(2)==1.00){
+	if(prediction[0].probability.toFixed(2)==1.00){
 	    if(status=="jump"){
 		count--;
 	    }
