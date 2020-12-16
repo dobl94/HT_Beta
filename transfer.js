@@ -62,7 +62,7 @@
         }
 	// finally draw the poses
         drawPose(pose);
-	count(prediction);
+	Count(prediction);
 	move(prediction);
         
     }
@@ -78,7 +78,7 @@
             }
         }
     }
-    function count(prediction){
+    function Count(prediction){
 	
         let codeC = "";
         if(prediction[0].probability.toFixed(2)==1.00){
