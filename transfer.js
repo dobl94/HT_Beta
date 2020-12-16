@@ -44,7 +44,7 @@
         await predict();
         window.requestAnimationFrame(loop);
     }
-    var status = "stand"
+    var status = "Walk"
     var count = 10
     async function predict() {
         // Prediction #1: run input through posenet
@@ -53,16 +53,16 @@
         // Prediction 2: run input through teachable machine classification model
         const prediction = await model.predict(posenetOutput);
 	if(prediction[0].probability.toFixed(2)==1.00){
-	    if(status=="jump"){
-		count--;
+	    if(status=="Jump"){
+		count--
 	    }
-		status = "stand"
+		status = "Walk"
 	}else if(prediction[1].probability.toFixed(2)==1.00){
-	    status = "squat"
+	    status = "Squat"
 	}else if(prediction[2].probability.toFixed(2)==1.00){
- 	    status = "jump"
+ 	    status = "Jump"
 	}else if(prediction[3].probability.toFixed(2)==1.00){
-	    status = "bend"
+	    status = "Bend"
 	}
 	
         for (let i = 0; i < maxPredictions; i++) {
