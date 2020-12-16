@@ -44,13 +44,26 @@
         await predict();
         window.requestAnimationFrame(loop);
     }
-
+    var status = "stand"
+    var count = 10
     async function predict() {
         // Prediction #1: run input through posenet
         // estimatePose can take in an image, video or canvas html element
         const { pose, posenetOutput } = await model.estimatePose(webcam.canvas);
         // Prediction 2: run input through teachable machine classification model
         const prediction = await model.predict(posenetOutput);
+	if(prediction[0].probability.tofixed(2)==1.00){
+	    if(status=="jump"){
+		count--;
+	    }
+		status = "stand"
+	}else if(prediction[1].probability.toFixed(2)==1.00){
+	    status = "squat"
+	}else if(prediction[2].probability.toFixed(2)==1.00){
+ 	    status = "jump"
+	}else if(prediction[3].probability.toFixed(2)==1.00){
+	    status = "bend"
+	}
 	
         for (let i = 0; i < maxPredictions; i++) {
             const classPrediction =
@@ -81,7 +94,8 @@
         let codeV = "";
 	let codeH = "";
 	let codeB = "";
-	//let codeC = "";
+	let codeC = "";
+	
 	    if(labelContainer.childNodes[0].innerHTML== "Walk: 1.00" ){
 	       	codeH="right";
 	       console.log("right pressed");
@@ -92,26 +106,26 @@
 	    }
 	    else if(labelContainer.childNodes[2].innerHTML== "Jump: 1.00" ){
 	       	codeV="up";
+	        if(count==0){
+		    codeC="finish";
+		}
 	       console.log("up pressed");
 	    }
 	    else if(labelContainer.childNodes[3].innerHTML== "Bend: 1.00" ){
 	    	codeB="left";
 		console.log("left pressed");
 	    }
-	    //else if(labelContainer.childNodes[4].innerHTML== "count: 1.00" ){
-	    //   	codeC="left ctrl";
-	     //  console.log("left control pressed");
-	    //}
 	    else{
 	    	codeV="";
 		codeH="";
 		codeB="";
-		//codeC="";
+		codeC="";
 	    }
 	if(gameInstance != null){
 	    gameInstance.SendMessage("sanuy","setV", codeV);
 	    gameInstance.SendMessage("sanuy","setH", codeH);
 	    gameInstance.SendMessage("sanuy","setB", codeB);
-	    //gameInstance.SendMessage("webcamManager","setX", codeC);
+	    gameInstance.SendMessage("downcounter","setC", codeC);
+	    gameInstance.SendMessage("sanuy","setC", codeC);
 	}
     }
